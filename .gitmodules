@@ -1,0 +1,6 @@
+[submodule "3rd/cxxopts"]
+	path = 3rd/cxxopts
+	url = https://github.com/jarro2783/cxxopts
+[submodule "3rd/insnet"]
+	path = 3rd/insnet
+	url = https://github.com/chncwang/insnet

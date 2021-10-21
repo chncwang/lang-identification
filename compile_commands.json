@@ -1,0 +1,207 @@
+[
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -g -o CMakeFiles/main.dir/src/main.cc.o -c /home/chncwang/Projects/lang-identification/src/main.cc",
+  "file": "/home/chncwang/Projects/lang-identification/src/main.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/base/def.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/base/def.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/base/def.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/base/memory.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/base/memory.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/base/memory.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/base/tensor.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/base/tensor.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/base/tensor.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/base/transferable.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/base/transferable.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/base/transferable.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/block/attention.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/block/attention.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/block/attention.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/block/gru.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/block/gru.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/block/gru.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/block/lstm.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/block/lstm.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/block/lstm.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/block/transformer.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/block/transformer.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/block/transformer.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/computation-graph/graph.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/computation-graph/graph.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/computation-graph/graph.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/computation-graph/node.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/computation-graph/node.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/computation-graph/node.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/loss/loss.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/loss/loss.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/loss/loss.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/nlp/vocab.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/nlp/vocab.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/nlp/vocab.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/operator/add.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/add.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/add.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/operator/atomic.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/atomic.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/atomic.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/operator/broadcast.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/broadcast.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/broadcast.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/operator/bucket.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/bucket.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/bucket.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/operator/concat.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/concat.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/concat.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/operator/div.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/div.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/div.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/operator/embedding.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/embedding.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/embedding.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/operator/layer_normalization.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/layer_normalization.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/layer_normalization.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/operator/linear.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/linear.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/linear.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/operator/log_softmax.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/log_softmax.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/log_softmax.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/operator/matrix.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/matrix.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/matrix.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/operator/mul.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/mul.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/mul.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/operator/param.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/param.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/param.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/operator/pooling.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/pooling.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/pooling.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/operator/softmax.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/softmax.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/softmax.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/operator/split.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/split.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/split.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/operator/sub.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/sub.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/operator/sub.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/optimizer/adagrad.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/optimizer/adagrad.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/optimizer/adagrad.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/optimizer/adam.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/optimizer/adam.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/optimizer/adam.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/optimizer/adamw.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/optimizer/adamw.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/optimizer/adamw.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/optimizer/optimizer.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/optimizer/optimizer.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/optimizer/optimizer.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/param/base-param.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/param/base-param.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/param/base-param.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/param/param.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/param/param.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/param/param.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/param/sparse-param.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/param/sparse-param.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/param/sparse-param.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/util/profiler.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/util/profiler.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/util/profiler.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -o CMakeFiles/insnet.dir/include/insnet/util/util.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/util/util.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/insnet/util/util.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet/include/fmt",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -std=gnu++11 -o CMakeFiles/fmt.dir/src/format.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/src/format.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/src/format.cc"
+},
+{
+  "directory": "/home/chncwang/Projects/lang-identification/build/cpu-debug/3rd/insnet/include/fmt",
+  "command": "/usr/bin/c++ -DN3LDG_DEBUG -I/home/chncwang/Projects/lang-identification/3rd/cxxopts/include -I/home/chncwang/Projects/lang-identification/src -I/home/chncwang/Projects/lang-identification/3rd/inih -I/home/chncwang/Projects/lang-identification/3rd/tinyutf8 -I/home/chncwang/Projects/lang-identification/3rd/insnet/include -I/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/include  -DEIGEN_FAST_MATH -Wall -Wno-sign-compare -msse3 -std=c++17 -O1 -msse3 -std=c++14 -O1 -fno-inline -ggdb3 -g -std=gnu++11 -o CMakeFiles/fmt.dir/src/os.cc.o -c /home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/src/os.cc",
+  "file": "/home/chncwang/Projects/lang-identification/3rd/insnet/include/fmt/src/os.cc"
+}
+]
