@@ -47,8 +47,10 @@ inline std::string langName(const std::string &path) {
     int dot_count = 0;
     int end = 0;
     for (int i = 0; i < name.size(); ++i) {
-        if (name.at(i) == '.' && ++dot_count == 3) {
+        if (name.at(i) == '.') {
             end = i;
+            if (++dot_count == 3)
+                break;
         }
     }
     return name.substr(0, end);
@@ -118,6 +120,7 @@ inline std::pair<std::vector<std::vector<int>>, std::vector<int>> readDataset(
         std::string path = entry.path();
         std::ifstream ifs(path);
         std::string raw_line;
+        std::string lang_name = langName(path);
 
         float style = 0;
         int local_sent_num = 0;
@@ -178,7 +181,7 @@ inline std::pair<std::vector<std::vector<int>>, std::vector<int>> readDataset(
                 style += 2;
                 sent_ret.push_back(filterSpaces(line, vocab));
             }
-            int class_id = class_vocab.at(langName(path));
+            int class_id = class_vocab.at(lang_name);
             class_ret.push_back(class_id);
         }
         if (local_sent_num > 0) {
@@ -239,18 +242,9 @@ inline std::vector<std::string> classList(const std::string &dir) {
         std::ifstream ifs(path);
         std::string raw_line;
 
-        int line_num = 0;
-        while (std::getline(ifs, raw_line)) {
-            if (++line_num > 1) {
-                break;
-            }
-        }
-
-        if (line_num > 1) {
-            auto lang_name = langName(path);
-            std::cout << "lang:" << lang_name << std::endl;
-            ret.push_back(lang_name);
-        }
+        auto lang_name = langName(path);
+        std::cout << "lang:" << lang_name << std::endl;
+        ret.push_back(lang_name);
     }
 
     return ret;

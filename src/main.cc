@@ -21,12 +21,16 @@
 #include "def.h"
 #include "model/params.h"
 #include "model/model.h"
+#include <iomanip>
 
 using cxxopts::Options;
 using std::string;
+using std::ios;
+using std::ofstream;
 using std::cout;
 using std::endl;
 using std::vector;
+using std::ostringstream;
 using std::priority_queue;
 using std::unordered_map;
 using std::unordered_set;
@@ -68,6 +72,27 @@ float F1(float correct, float predicted, float golden) {
     return 2 * prec * recall / (prec + recall);
 }
 
+string saveModel(ModelParams &model_params, const string &filename_prefix, int iter, int dim,
+        int word_layer,
+        int sent_layer,
+        int class_num) {
+    cout << "saving model file..." << endl;
+    auto t = time(nullptr);
+    auto tm = *localtime(&t);
+    ostringstream oss;
+    oss << std::put_time(&tm, "%d-%m-%Y-%H-%M-%S");
+    string filename = filename_prefix + oss.str() + "-iter" + std::to_string(iter);
+#if USE_GPU
+    model_params.copyFromDeviceToHost();
+#endif
+
+    ofstream out(filename, ios::binary);
+    cereal::BinaryOutputArchive output_ar(out);
+    output_ar(model_params, iter, dim, word_layer, sent_layer, class_num);
+    cout << fmt::format("model file {} saved", filename) << endl;
+    return filename;
+}
+
 int main(int argc, const char *argv[]) {
     Options options("InsNet benchmark");
     options.add_options()
@@ -81,6 +106,7 @@ int main(int argc, const char *argv[]) {
         ("sent_layer", "sent layer", cxxopts::value<int>()->default_value("1"))
         ("head", "head", cxxopts::value<int>()->default_value("8"))
         ("dim", "hidden dim", cxxopts::value<int>()->default_value("512"))
+        ("save_iter", "save iter", cxxopts::value<int>()->default_value("100000"))
         ("cutoff", "cutoff", cxxopts::value<int>()->default_value("0"));
 
     auto args = options.parse(argc, argv);
@@ -128,6 +154,9 @@ int main(int argc, const char *argv[]) {
     insnet::AdamOptimizer optimizer(params.tunableParams(), lr);
     int iteration = -1;
 
+    int save_iter = args["save_iter"].as<int>();
+    cout << fmt::format("save_iter:{}", save_iter) << endl;
+
     vector<int> train_ids;
     for (int i = 0; i < train_set.first.size(); ++i) {
         train_ids.push_back(i);
@@ -171,9 +200,10 @@ int main(int argc, const char *argv[]) {
 
             int sentence_size = 0;
             vector<Node *> log_probs;
+            vector<int> *batch_ids;
             while (word_sum < batch_size && batch_it != train_ids.end()) {
-                const auto &batch_ids = train_set.first.at(*batch_it);
-                Node *node = sentEnc(batch_ids, graph, params, dropout, initial_states,
+                batch_ids = &train_set.first.at(*batch_it);
+                Node *node = sentEnc(*batch_ids, graph, params, dropout, initial_states,
                         word_symbol_id);
                 log_probs.push_back(node);
 
@@ -213,11 +243,29 @@ int main(int argc, const char *argv[]) {
                 cout << fmt::format("process:{} loss:{} sentence number:{} macro F:{} acc:{}",
                         sentence_size_sum / train_ids.size(), loss,
                         sentence_size, sum / class_vocab.size(), correct_time / total_time) << endl;
+                cout << "gold:" << class_vocab.from_id(answers.back().back()) << endl;
+                for (int i = 0; i < batch_ids->size(); ++i) {
+                    if (batch_ids->at(i) == word_symbol_id) {
+                        cout << " ";
+                    } else {
+                        cout << vocab.from_id(batch_ids->at(i));
+                    }
+                }
+                cout << endl;
+                for (int id : predicted_ids.back()) {
+                    cout << class_vocab.from_id(id) << " ";
+                }
+                cout << endl;
             }
             graph.backward();
             optimizer.step();
 
             batch_begin = batch_it;
+
+            if (iteration % save_iter == save_iter - 1 || batch_begin == train_ids.end()) {
+                saveModel(params, "model", iteration, dim, word_layer, sent_layer,
+                        class_vocab.size());
+            }
         }
     }
 
