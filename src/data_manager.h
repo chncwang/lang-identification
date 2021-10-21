@@ -74,29 +74,19 @@ inline std::vector<int> splitIntoWords(const utf8_string &line,
         char32_t ch = line.at(i);
         if (ch == ' ') {
             if (state == ParsingState::IN_WORD) {
-                ret.push_back(vocab.at(WORD_SYMBOL));
-                for (int j = begin_i; j < i; ++j) {
-                    auto str = line.substr(j, 1).cpp_str();
-                    int id = wordId(vocab, str);
-                    ret.push_back(id);
-                }
                 state = ParsingState::IN_SPACE;
             }
         } else {
             if (state == ParsingState::IN_SPACE) {
                 begin_i = i;
                 state = ParsingState::IN_WORD;
+                ret.push_back(vocab.at(WORD_SYMBOL));
             }
+            auto str = line.substr(i, 1).cpp_str();
+            int id = wordId(vocab, str);
+            ret.push_back(id);
         }
     }
-//    if (state == IN_WORD) {
-//        ret.push_back(vocab.at(WORD_SYMBOL));
-//        for (int j = begin_i; j < line.length(); ++j) {
-//            auto str = line.substr(j, 1).cpp_str();
-//            int id = wordId(vocab, str);
-//            ret.push_back(id);
-//        }
-//    }
     return ret;
 }
 
@@ -189,7 +179,6 @@ inline std::pair<std::vector<std::vector<int>>, std::vector<int>> readDataset(
                 sent_ret.push_back(filterSpaces(line, vocab));
             }
             int class_id = class_vocab.at(langName(path));
-            std::cout << "class_id:" << class_id << std::endl;
             class_ret.push_back(class_id);
         }
         if (local_sent_num > 0) {

@@ -39,7 +39,7 @@ inline std::pair<insnet::Node *, std::vector<insnet::LSTMState>> sentEnc(insnet:
 }
 
 inline std::pair<insnet::Node *, std::vector<insnet::LSTMState>> englishStyleSentEnc(
-        std::vector<int> &word,
+        const std::vector<int> &word,
         std::vector<insnet::LSTMState> &last_states,
         insnet::Graph &graph,
         ModelParams &params,
@@ -47,6 +47,33 @@ inline std::pair<insnet::Node *, std::vector<insnet::LSTMState>> englishStyleSen
     using insnet::Node;
     Node *input = wordEnc(word, graph, params, dropout);
     return sentEnc(*input, last_states, params, dropout);
+}
+
+inline insnet::Node *englishStyleSentEnc(const std::vector<int> &sent, int word_symbol_id,
+        insnet::Graph &graph,
+        ModelParams &params,
+        insnet::dtype dropout,
+        std::vector<insnet::LSTMState> &initial_state) {
+    using insnet::Node;
+    using std::vector;
+
+    vector<int> word;
+    word.reserve(sent.size());
+    auto last_state = initial_state;
+    vector<Node *> log_probs;
+    log_probs.reserve(sent.size());
+    for (int i = 0; i < sent.size(); ++i) {
+        int id = sent.at(i);
+        if (i == sent.size() - 1 || sent.at(i + 1) == word_symbol_id) {
+            auto r = englishStyleSentEnc(word, last_state, graph, params, dropout);
+            last_state = r.second;
+            log_probs.push_back(r.first);
+            word.clear();
+        }
+        word.push_back(id);
+    }
+
+    return cat(log_probs);
 }
 
 inline std::pair<insnet::Node *, std::vector<insnet::LSTMState>> chineseStyleSentEnc(int word,
@@ -57,6 +84,35 @@ inline std::pair<insnet::Node *, std::vector<insnet::LSTMState>> chineseStyleSen
     using insnet::Node;
     Node *input = insnet::embedding(graph, word, params.emb.E);
     return sentEnc(*input, last_states, params, dropout);
+}
+
+inline insnet::Node *chineseStyleSentEnc(const std::vector<int> &sent, insnet::Graph &graph,
+        ModelParams &params,
+        insnet::dtype dropout,
+        std::vector<insnet::LSTMState> &initial_state) {
+    using insnet::Node;
+    using std::vector;
+    auto last_state = initial_state;
+    vector<Node *> log_probs;
+    log_probs.reserve(sent.size());
+    for (int id : sent) {
+        auto r = chineseStyleSentEnc(id, last_state, graph, params, dropout);
+        last_state = r.second;
+        log_probs.push_back(r.first);
+    }
+    return cat(log_probs);
+}
+
+inline insnet::Node *sentEnc(const std::vector<int> &sent, insnet::Graph &graph,
+        ModelParams &params,
+        insnet::dtype dropout,
+        std::vector<insnet::LSTMState> &initial_state,
+        int word_symbol_id) {
+    using insnet::Node;
+    using std::vector;
+    return sent.front() == word_symbol_id ?
+        englishStyleSentEnc(sent, word_symbol_id, graph, params, dropout, initial_state) :
+        chineseStyleSentEnc(sent, graph, params, dropout, initial_state);
 }
 
 #endif

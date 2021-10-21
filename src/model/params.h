@@ -3,7 +3,7 @@
 
 #include "insnet/insnet.h"
 
-class ModelParams : insnet::TunableParamCollection
+class ModelParams : public insnet::TunableParamCollection
 #if USE_GPU
 , public insnet::cuda::TransferableComponents
 #endif
