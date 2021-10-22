@@ -166,7 +166,7 @@ float evaluate(ModelParams &params, dtype dropout, const string &dir,
         int sentence_size = 0;
         vector<Node *> log_probs;
         vector<int> *batch_ids;
-        while (word_sum < batch_size && batch_it != ids.end()) {
+        while (word_sum < batch_size * 0.5 && batch_it != ids.end()) {
             batch_ids = &dataset.first.at(*batch_it);
             Node *node = sentEnc(*batch_ids, graph, params, dropout, initial_states,
                     word_symbol_id);
@@ -222,7 +222,7 @@ int main(int argc, const char *argv[]) {
     Options options("InsNet benchmark");
     options.add_options()
         ("device_id", "device id", cxxopts::value<int>()->default_value("0"))
-        ("model", "load model", cxxopts::value<string>())
+        ("model", "load model", cxxopts::value<string>()->default_value(""))
         ("train", "training set dir", cxxopts::value<string>())
         ("dev", "dev set dir", cxxopts::value<string>())
         ("batch_size", "batch size", cxxopts::value<int>()->default_value("1"))

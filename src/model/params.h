@@ -34,13 +34,13 @@ public:
 
 #if USE_GPU
     std::vector<insnet::cuda::Transferable *> transferablePtrs() override {
-        return {&emb, &sent_enc, &word_enc};
+        return {&emb, &sent_enc, &word_enc, &output};
     }
 #endif
 
 protected:
     virtual std::vector<insnet::TunableParam *> tunableComponents() override {
-        return {&emb, &sent_enc, &word_enc};
+        return {&emb, &sent_enc, &word_enc, &output};
     }
 };
 
