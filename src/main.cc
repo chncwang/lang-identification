@@ -25,9 +25,11 @@
 
 using cxxopts::Options;
 using std::string;
+using std::ifstream;
 using std::ios;
 using std::ofstream;
 using std::cout;
+using std::cerr;
 using std::endl;
 using std::vector;
 using std::ostringstream;
@@ -70,10 +72,12 @@ float F1(float correct, float predicted, float golden) {
     return 2 * correct / (predicted + golden + 1e-10);
 }
 
-string saveModel(ModelParams &model_params, const string &filename_prefix, int iter, int dim,
+string saveModel(ModelParams &model_params, Vocab &vocab, Vocab &class_vocab,
+        const string &filename_prefix, int iter,
+        int dim,
         int word_layer,
-        int sent_layer,
-        int class_num) {
+        int word_head,
+        int sent_layer) {
     cout << "saving model file..." << endl;
     auto t = time(nullptr);
     auto tm = *localtime(&t);
@@ -86,9 +90,33 @@ string saveModel(ModelParams &model_params, const string &filename_prefix, int i
 
     ofstream out(filename, ios::binary);
     cereal::BinaryOutputArchive output_ar(out);
-    output_ar(model_params, iter, dim, word_layer, sent_layer, class_num);
+    output_ar(iter, dim, word_layer, word_head, sent_layer, class_vocab, vocab, model_params);
     cout << fmt::format("model file {} saved", filename) << endl;
     return filename;
+}
+
+void loadModel(ModelParams &model_params, Vocab &vocab, Vocab &class_vocab, const string &filename,
+        int &iter,
+        int &dim,
+        int &word_layer,
+        int &word_head,
+        int &sent_layer) {
+    cout << "loading model file..." << endl;
+    ifstream is(filename.c_str());
+    if (is) {
+        cout << "loading model..." << endl;
+        cereal::BinaryInputArchive ar(is);
+        ar(iter, dim, word_layer, word_head, sent_layer, class_vocab, vocab);
+        model_params.init(vocab, dim, word_layer, word_head, sent_layer, 1024, class_vocab.size());
+        ar(model_params);
+#if USE_GPU
+        model_params.copyFromHostToDevice();
+#endif
+        cout << "model loaded" << endl;
+    } else {
+        cerr << fmt::format("load model fail - filename:%1%", filename) << endl;
+        abort();
+    }
 }
 
 float evaluate(ModelParams &params, dtype dropout, const string &dir,
@@ -167,7 +195,6 @@ float evaluate(ModelParams &params, dtype dropout, const string &dir,
             }
             predicted_times.at(predicted_ids.at(i).back())++;
             int answer = answers.at(i).back();
-            cout << "answer:" << answer << endl;
             golden_times.at(answer)++;
             total_time++;
         }
@@ -195,6 +222,7 @@ int main(int argc, const char *argv[]) {
     Options options("InsNet benchmark");
     options.add_options()
         ("device_id", "device id", cxxopts::value<int>()->default_value("0"))
+        ("model", "load model", cxxopts::value<string>())
         ("train", "training set dir", cxxopts::value<string>())
         ("dev", "dev set dir", cxxopts::value<string>())
         ("batch_size", "batch size", cxxopts::value<int>()->default_value("1"))
@@ -247,12 +275,21 @@ int main(int argc, const char *argv[]) {
     cout << "head:" << head << endl;
     int sent_layer = args["sent_layer"].as<int>();
     cout << "sent_layer:" << sent_layer << endl;
-    params.init(vocab, dim, word_layer, head, sent_layer, 1024, class_vocab.size());
+
+    string model_file = args["model"].as<string>();
+    cout << "model_file:" << model_file << endl;
+    int iteration = -1;
+
+    if (model_file.empty()) {
+        params.init(vocab, dim, word_layer, head, sent_layer, 1024, class_vocab.size());
+    } else {
+        loadModel(params, vocab, class_vocab, model_file, iteration, dim, word_layer, head,
+                sent_layer);
+    }
 
     dtype lr = args["lr"].as<dtype>();
     cout << fmt::format("lr:{}", lr) << endl;
     insnet::AdamOptimizer optimizer(params.tunableParams(), lr);
-    int iteration = -1;
 
     int save_iter = args["save_iter"].as<int>();
     cout << fmt::format("save_iter:{}", save_iter) << endl;
@@ -374,8 +411,8 @@ int main(int argc, const char *argv[]) {
                     }
                     last_f1 = macro_f1;
                 }
-                saveModel(params, "model", iteration, dim, word_layer, sent_layer,
-                        class_vocab.size());
+                saveModel(params, vocab, class_vocab, "model-", iteration, dim, word_layer, head,
+                        sent_layer);
             }
         }
     }
