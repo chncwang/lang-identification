@@ -77,6 +77,8 @@ string saveModel(ModelParams &model_params, Vocab &vocab, Vocab &class_vocab,
         int dim,
         int word_layer,
         int word_head,
+        int seg_layer,
+        int seg_head,
         int sent_layer) {
     cout << "saving model file..." << endl;
     auto t = time(nullptr);
@@ -90,7 +92,8 @@ string saveModel(ModelParams &model_params, Vocab &vocab, Vocab &class_vocab,
 
     ofstream out(filename, ios::binary);
     cereal::BinaryOutputArchive output_ar(out);
-    output_ar(iter, dim, word_layer, word_head, sent_layer, class_vocab, vocab, model_params);
+    output_ar(iter, dim, word_layer, word_head, seg_layer, seg_head, sent_layer, class_vocab,
+            vocab, model_params);
     cout << fmt::format("model file {} saved", filename) << endl;
     return filename;
 }
@@ -108,7 +111,7 @@ void loadModel(ModelParams &model_params, Vocab &vocab, Vocab &class_vocab, cons
     if (is) {
         cout << "loading model..." << endl;
         cereal::BinaryInputArchive ar(is);
-        ar(iter, dim, word_layer, word_head, sent_layer, class_vocab, vocab);
+        ar(iter, dim, word_layer, word_head, seg_layer, seg_head, sent_layer, class_vocab, vocab);
         model_params.init(vocab, dim, word_layer, word_head, seg_layer, seg_head, sent_layer, 1024,
                 class_vocab.size());
         ar(model_params);
@@ -122,20 +125,19 @@ void loadModel(ModelParams &model_params, Vocab &vocab, Vocab &class_vocab, cons
     }
 }
 
-float evaluate(ModelParams &params, dtype dropout, const string &dir,
-        const std::unordered_map<std::string, int> &vocab,
-        const std::unordered_map<std::string, int> &class_vocab,
+float evaluate(ModelParams &params, dtype dropout, const string &dir, Vocab &vocab,
+        Vocab &class_vocab,
         int seg_len,
         int batch_size = 1,
         float ratio = 1) {
-    auto dataset = readDataset(dir, vocab, class_vocab, ratio);
+    auto dataset = readDataset(dir, vocab.m_string_to_id, class_vocab.m_string_to_id, ratio);
     vector<int> ids;
     for (int i = 0; i < dataset.first.size(); ++i) {
         ids.push_back(i);
     }
     auto batch_begin = ids.begin();
-    int word_symbol_id = vocab.at(WORD_SYMBOL);
-    int seg_symbol_id = vocab.at(SEG_SYMBOL);
+    int word_symbol_id = vocab.from_string(WORD_SYMBOL);
+    int seg_symbol_id = vocab.from_string(SEG_SYMBOL);
     vector<float> correct_times;
     vector<float> predicted_times;
     vector<float> golden_times;
@@ -180,7 +182,7 @@ float evaluate(ModelParams &params, dtype dropout, const string &dir,
             int answer = dataset.second.at(*batch_it);
             vector<int> ans;
             int word_num = node->size() / class_vocab.size();
-            word_sum += word_num;
+            word_sum += batch_ids->size();
             for (int i = 0; i < word_num; ++i) {
                 ans.push_back(answer);
             }
@@ -206,18 +208,35 @@ float evaluate(ModelParams &params, dtype dropout, const string &dir,
 
         batch_begin = batch_it;
 
-        if (iteration % 100 == 0) {
+        if (iteration % 10 == 0) {
             float sum = 0;
             for (int i = 0; i < correct_times.size(); ++i) {
-                sum += F1(correct_times.at(i), predicted_times.at(i), golden_times.at(i));
+                float f = F1(correct_times.at(i), predicted_times.at(i), golden_times.at(i));
+                sum += f;
             }
             cout << "macro f1:" << sum / correct_times.size() << endl;
+            cout << "gold:" << class_vocab.from_id(answers.back().back()) << endl;
+            for (int i = 0; i < batch_ids->size(); ++i) {
+                if (batch_ids->at(i) == word_symbol_id) {
+                    cout << " ";
+                } else {
+                    cout << vocab.from_id(batch_ids->at(i));
+                }
+            }
+            cout << endl;
+            cout << "evaluate predicted: ";
+            for (int id : predicted_ids.back()) {
+                cout << class_vocab.from_id(id) << " ";
+            }
+            cout << endl;
         }
     }
 
     float sum = 0;
     for (int i = 0; i < correct_times.size(); ++i) {
-        sum += F1(correct_times.at(i), predicted_times.at(i), golden_times.at(i));
+        float f = F1(correct_times.at(i), predicted_times.at(i), golden_times.at(i));
+        cout << class_vocab.from_id(i) << ":" << f << endl;
+        sum += f;
     }
 
     return sum / correct_times.size();
@@ -393,7 +412,6 @@ int main(int argc, const char *argv[]) {
                 float sum = 0;
                 for (int i = 0; i < correct_times.size(); ++i) {
                     float f1 = F1(correct_times.at(i), predicted_times.at(i), golden_times.at(i));
-//                    cout << class_vocab.from_id(i) << " f1:" << f1 << endl;
                     sum += f1;
                 }
                 cout << fmt::format("process:{} loss:{} sentence number:{} macro F:{} acc:{}",
@@ -419,8 +437,8 @@ int main(int argc, const char *argv[]) {
             batch_begin = batch_it;
 
             if (iteration % save_iter == save_iter - 1 || batch_begin == train_ids.end()) {
-                float macro_f1 = evaluate(params, dropout, dev_dir, vocab.m_string_to_id,
-                        class_vocab.m_string_to_id, batch_size, ratio);
+                float macro_f1 = evaluate(params, dropout, dev_dir, vocab, class_vocab, seg_len,
+                        batch_size, ratio);
                 cout << fmt::format("f1:{} last:{}", macro_f1, last_f1) << endl;
                 if (batch_begin == train_ids.end()) {
                     if (last_f1 > macro_f1) {
@@ -429,7 +447,7 @@ int main(int argc, const char *argv[]) {
                     last_f1 = macro_f1;
                 }
                 saveModel(params, vocab, class_vocab, "model-", iteration, dim, word_layer,
-                        word_head, sent_layer);
+                        word_head, seg_layer, seg_head, sent_layer);
             }
         }
     }
