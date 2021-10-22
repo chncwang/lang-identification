@@ -67,9 +67,7 @@ unordered_map<string, int> calWordFreq(const vector<vector<string>> &sentences) 
 }
 
 float F1(float correct, float predicted, float golden) {
-    float prec = correct / predicted;
-    float recall = correct / golden;
-    return 2 * prec * recall / (prec + recall);
+    return 2 * correct / (predicted + golden + 1e-10);
 }
 
 string saveModel(ModelParams &model_params, const string &filename_prefix, int iter, int dim,
@@ -81,7 +79,7 @@ string saveModel(ModelParams &model_params, const string &filename_prefix, int i
     auto tm = *localtime(&t);
     ostringstream oss;
     oss << std::put_time(&tm, "%d-%m-%Y-%H-%M-%S");
-    string filename = filename_prefix + oss.str() + "-iter" + std::to_string(iter);
+    string filename = filename_prefix + oss.str() + "-iter-" + std::to_string(iter);
 #if USE_GPU
     model_params.copyFromDeviceToHost();
 #endif
@@ -93,11 +91,112 @@ string saveModel(ModelParams &model_params, const string &filename_prefix, int i
     return filename;
 }
 
+float evaluate(ModelParams &params, dtype dropout, const string &dir,
+        const std::unordered_map<std::string, int> &vocab,
+        const std::unordered_map<std::string, int> &class_vocab,
+        int batch_size = 1,
+        float ratio = 1) {
+    auto dataset = readDataset(dir, vocab, class_vocab, ratio);
+    vector<int> ids;
+    for (int i = 0; i < dataset.first.size(); ++i) {
+        ids.push_back(i);
+    }
+    auto batch_begin = ids.begin();
+    int word_symbol_id = vocab.at(WORD_SYMBOL);
+    vector<float> correct_times;
+    vector<float> predicted_times;
+    vector<float> golden_times;
+    float correct_time = 0;
+    float total_time = 0;
+    cout << "class_vocab size:" << class_vocab.size() << endl;
+    for (int i = 0; i < class_vocab.size(); ++i) {
+        correct_times.push_back(0);
+        predicted_times.push_back(0);
+        golden_times.push_back(0);
+    }
+
+    float sentence_size_sum = 0;
+    default_random_engine engine(0);
+    shuffle(ids.begin(), ids.end(), engine);
+    
+    int iteration = -1;
+
+    while (batch_begin != ids.end()) {
+        ++iteration;
+        auto batch_it = batch_begin;
+        int word_sum = 0;
+        Graph graph(insnet::ModelStage::INFERENCE, false);
+        vector<vector<int>> answers;
+
+        vector<insnet::LSTMState> initial_states;
+        initial_states.reserve(params.sent_enc.size());
+        Node *zero = insnet::tensor(graph, params.word_enc.hiddenDim(), 0);
+        for (int i = 0; i < params.sent_enc.size(); ++i) {
+            initial_states.push_back({zero, zero});
+        }
+
+        int sentence_size = 0;
+        vector<Node *> log_probs;
+        vector<int> *batch_ids;
+        while (word_sum < batch_size && batch_it != ids.end()) {
+            batch_ids = &dataset.first.at(*batch_it);
+            Node *node = sentEnc(*batch_ids, graph, params, dropout, initial_states,
+                    word_symbol_id);
+            log_probs.push_back(node);
+
+            int answer = dataset.second.at(*batch_it);
+            vector<int> ans;
+            int word_num = node->size() / class_vocab.size();
+            word_sum += word_num;
+            for (int i = 0; i < word_num; ++i) {
+                ans.push_back(answer);
+            }
+            answers.push_back(move(ans));
+
+            ++batch_it;
+            ++sentence_size;
+        }
+        sentence_size_sum += sentence_size;
+
+        graph.forward();
+        auto predicted_ids = insnet::argmax(log_probs, class_vocab.size());
+        for (int i = 0; i < predicted_ids.size(); ++i) {
+            if (predicted_ids.at(i).back() == answers.at(i).back()) {
+                correct_times.at(predicted_ids.at(i).back())++;
+                correct_time++;
+            }
+            predicted_times.at(predicted_ids.at(i).back())++;
+            int answer = answers.at(i).back();
+            cout << "answer:" << answer << endl;
+            golden_times.at(answer)++;
+            total_time++;
+        }
+
+        batch_begin = batch_it;
+
+        if (iteration % 100 == 0) {
+            float sum = 0;
+            for (int i = 0; i < correct_times.size(); ++i) {
+                sum += F1(correct_times.at(i), predicted_times.at(i), golden_times.at(i));
+            }
+            cout << "macro f1:" << sum / correct_times.size() << endl;
+        }
+    }
+
+    float sum = 0;
+    for (int i = 0; i < correct_times.size(); ++i) {
+        sum += F1(correct_times.at(i), predicted_times.at(i), golden_times.at(i));
+    }
+
+    return sum / correct_times.size();
+}
+
 int main(int argc, const char *argv[]) {
     Options options("InsNet benchmark");
     options.add_options()
         ("device_id", "device id", cxxopts::value<int>()->default_value("0"))
         ("train", "training set dir", cxxopts::value<string>())
+        ("dev", "dev set dir", cxxopts::value<string>())
         ("batch_size", "batch size", cxxopts::value<int>()->default_value("1"))
         ("dropout", "dropout", cxxopts::value<float>()->default_value("0.1"))
         ("lr", "learning rate", cxxopts::value<float>()->default_value("0.001"))
@@ -118,19 +217,20 @@ int main(int argc, const char *argv[]) {
     insnet::cuda::initCuda(device_id, 0);
 #endif
 
-    string train_pair_file = args["train"].as<string>();
+    string train_dir = args["train"].as<string>();
+    string dev_dir = args["dev"].as<string>();
 
     float ratio = args["ratio"].as<float>();
-    auto char_list = charList(train_pair_file, args["cutoff"].as<int>(), ratio);
+    auto char_list = charList(train_dir, args["cutoff"].as<int>(), ratio);
     Vocab vocab;
     vocab.init(char_list);
     cout << "vocab size:" << vocab.size() << endl;
     Vocab class_vocab;
-    auto class_list = classList(train_pair_file);
+    auto class_list = classList(train_dir);
     class_vocab.init(class_list);
     cout << "class size:" << class_vocab.size() << endl;
 
-    auto train_set = readDataset(train_pair_file, vocab.m_string_to_id, class_vocab.m_string_to_id,
+    auto train_set = readDataset(train_dir, vocab.m_string_to_id, class_vocab.m_string_to_id,
             ratio);
 
     if (train_set.first.size() != train_set.second.size()) {
@@ -161,6 +261,8 @@ int main(int argc, const char *argv[]) {
     for (int i = 0; i < train_set.first.size(); ++i) {
         train_ids.push_back(i);
     }
+
+    float last_f1 = -1;
 
     for (int epoch = 0; ; ++epoch) {
         default_random_engine engine(0);
@@ -263,6 +365,15 @@ int main(int argc, const char *argv[]) {
             batch_begin = batch_it;
 
             if (iteration % save_iter == save_iter - 1 || batch_begin == train_ids.end()) {
+                float macro_f1 = evaluate(params, dropout, dev_dir, vocab.m_string_to_id,
+                        class_vocab.m_string_to_id, batch_size, ratio);
+                cout << fmt::format("f1:{} last:{}", macro_f1, last_f1) << endl;
+                if (batch_begin == train_ids.end()) {
+                    if (last_f1 > macro_f1) {
+                        return 0;
+                    }
+                    last_f1 = macro_f1;
+                }
                 saveModel(params, "model", iteration, dim, word_layer, sent_layer,
                         class_vocab.size());
             }

@@ -27,6 +27,11 @@ public:
     insnet::ParamArray<insnet::LSTMParams> sent_enc;
     insnet::LinearParams output;
 
+    template<typename Archive>
+    void serialize(Archive &ar) {
+        ar(emb, word_enc, sent_enc, output);
+    }
+
 #if USE_GPU
     std::vector<insnet::cuda::Transferable *> transferablePtrs() override {
         return {&emb, &sent_enc, &word_enc};

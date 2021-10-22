@@ -56,7 +56,7 @@ inline std::string langName(const std::string &path) {
     return name.substr(0, end);
 }
 
-inline int wordId(std::unordered_map<std::string, int> &vocab, const std::string &str) {
+inline int wordId(const std::unordered_map<std::string, int> &vocab, const std::string &str) {
     auto it = vocab.find(str);
     if (it == vocab.end()) {
         return vocab.at(UNK);
@@ -68,7 +68,7 @@ inline int wordId(std::unordered_map<std::string, int> &vocab, const std::string
 inline static int max_word_len;
 
 inline std::vector<int> splitIntoWords(const utf8_string &line,
-        std::unordered_map<std::string, int> &vocab) {
+        const std::unordered_map<std::string, int> &vocab) {
     std::vector<int> ret;
     ParsingState state = ParsingState::IN_SPACE;
     int begin_i = 0;
@@ -93,7 +93,7 @@ inline std::vector<int> splitIntoWords(const utf8_string &line,
 }
 
 inline std::vector<int> filterSpaces(const utf8_string &line,
-        std::unordered_map<std::string, int> &vocab) {
+        const std::unordered_map<std::string, int> &vocab) {
     std::vector<int> ret;
     for (int i = 0; i < line.length(); ++i) {
         char32_t ch = line.at(i);
@@ -107,9 +107,9 @@ inline std::vector<int> filterSpaces(const utf8_string &line,
 
 inline std::pair<std::vector<std::vector<int>>, std::vector<int>> readDataset(
         const std::string &dir_name,
-        std::unordered_map<std::string, int> &vocab,
-        std::unordered_map<std::string, int> &class_vocab,
-        float rate = 1) {
+        const std::unordered_map<std::string, int> &vocab,
+        const std::unordered_map<std::string, int> &class_vocab,
+        float ratio = 1) {
     std::vector<std::vector<int>> sent_ret;
     std::vector<int> class_ret;
     int sent_num = 0;
@@ -129,7 +129,7 @@ inline std::pair<std::vector<std::vector<int>>, std::vector<int>> readDataset(
         while (std::getline(ifs, raw_line)) {
             ++sent_num;
             ++local_sent_num;
-            if (local_sent_num % 100 >= rate * 100) {
+            if (local_sent_num % 100 >= ratio * 100) {
                 continue;
             }
             ++read_sent_num;
@@ -235,7 +235,7 @@ inline std::vector<std::string> charList(const std::string &dir, int cutoff = 0,
 }
 
 inline std::vector<std::string> classList(const std::string &dir) {
-    std::vector<std::string> ret;
+    std::set<std::string> class_set;
 
     for (const auto &entry : std::filesystem::directory_iterator(dir)) {
         std::string path = entry.path();
@@ -244,7 +244,13 @@ inline std::vector<std::string> classList(const std::string &dir) {
 
         auto lang_name = langName(path);
         std::cout << "lang:" << lang_name << std::endl;
-        ret.push_back(lang_name);
+        class_set.insert(lang_name);
+    }
+
+    std::vector<std::string> ret;
+
+    for (const auto &it : class_set) {
+        ret.push_back(it);
     }
 
     return ret;
