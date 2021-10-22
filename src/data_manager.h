@@ -230,6 +230,7 @@ inline std::vector<std::string> charList(const std::string &dir, int cutoff = 0,
     }
     ret.push_back(UNK);
     ret.push_back(WORD_SYMBOL);
+    ret.push_back(SEG_SYMBOL);
 
     return ret;
 }

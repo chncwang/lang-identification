@@ -100,6 +100,8 @@ void loadModel(ModelParams &model_params, Vocab &vocab, Vocab &class_vocab, cons
         int &dim,
         int &word_layer,
         int &word_head,
+        int &seg_layer,
+        int &seg_head,
         int &sent_layer) {
     cout << "loading model file..." << endl;
     ifstream is(filename.c_str());
@@ -107,7 +109,8 @@ void loadModel(ModelParams &model_params, Vocab &vocab, Vocab &class_vocab, cons
         cout << "loading model..." << endl;
         cereal::BinaryInputArchive ar(is);
         ar(iter, dim, word_layer, word_head, sent_layer, class_vocab, vocab);
-        model_params.init(vocab, dim, word_layer, word_head, sent_layer, 1024, class_vocab.size());
+        model_params.init(vocab, dim, word_layer, word_head, seg_layer, seg_head, sent_layer, 1024,
+                class_vocab.size());
         ar(model_params);
 #if USE_GPU
         model_params.copyFromHostToDevice();
@@ -122,6 +125,7 @@ void loadModel(ModelParams &model_params, Vocab &vocab, Vocab &class_vocab, cons
 float evaluate(ModelParams &params, dtype dropout, const string &dir,
         const std::unordered_map<std::string, int> &vocab,
         const std::unordered_map<std::string, int> &class_vocab,
+        int seg_len,
         int batch_size = 1,
         float ratio = 1) {
     auto dataset = readDataset(dir, vocab, class_vocab, ratio);
@@ -131,6 +135,7 @@ float evaluate(ModelParams &params, dtype dropout, const string &dir,
     }
     auto batch_begin = ids.begin();
     int word_symbol_id = vocab.at(WORD_SYMBOL);
+    int seg_symbol_id = vocab.at(SEG_SYMBOL);
     vector<float> correct_times;
     vector<float> predicted_times;
     vector<float> golden_times;
@@ -168,8 +173,8 @@ float evaluate(ModelParams &params, dtype dropout, const string &dir,
         vector<int> *batch_ids;
         while (word_sum < batch_size * 0.5 && batch_it != ids.end()) {
             batch_ids = &dataset.first.at(*batch_it);
-            Node *node = sentEnc(*batch_ids, graph, params, dropout, initial_states,
-                    word_symbol_id);
+            Node *node = sentEnc(*batch_ids, seg_len, seg_symbol_id, graph, params, dropout,
+                    initial_states, word_symbol_id);
             log_probs.push_back(node);
 
             int answer = dataset.second.at(*batch_it);
@@ -230,8 +235,11 @@ int main(int argc, const char *argv[]) {
         ("lr", "learning rate", cxxopts::value<float>()->default_value("0.001"))
         ("ratio", "dataset ratio", cxxopts::value<float>()->default_value("1"))
         ("word_layer", "word layer", cxxopts::value<int>()->default_value("2"))
+        ("seg_layer", "segment layer", cxxopts::value<int>()->default_value("3"))
         ("sent_layer", "sent layer", cxxopts::value<int>()->default_value("1"))
-        ("head", "head", cxxopts::value<int>()->default_value("8"))
+        ("word_head", "word head", cxxopts::value<int>()->default_value("8"))
+        ("seg_head", "segment head", cxxopts::value<int>()->default_value("8"))
+        ("seg_len", "segment length", cxxopts::value<int>()->default_value("512"))
         ("dim", "hidden dim", cxxopts::value<int>()->default_value("512"))
         ("save_iter", "save iter", cxxopts::value<int>()->default_value("100000"))
         ("cutoff", "cutoff", cxxopts::value<int>()->default_value("0"));
@@ -271,20 +279,25 @@ int main(int argc, const char *argv[]) {
     cout << "dim:" << dim << endl;
     int word_layer = args["word_layer"].as<int>();
     cout << "word_layer:" << word_layer << endl;
-    int head = args["head"].as<int>();
-    cout << "head:" << head << endl;
+    int word_head = args["word_head"].as<int>();
+    cout << "word head:" << word_head << endl;
     int sent_layer = args["sent_layer"].as<int>();
     cout << "sent_layer:" << sent_layer << endl;
+    int seg_layer = args["seg_layer"].as<int>();
+    cout << "seg_layer:" << seg_layer << endl;
+    int seg_head = args["seg_head"].as<int>();
+    cout << "seg_head:" << seg_head << endl;
 
     string model_file = args["model"].as<string>();
     cout << "model_file:" << model_file << endl;
     int iteration = -1;
 
     if (model_file.empty()) {
-        params.init(vocab, dim, word_layer, head, sent_layer, 1024, class_vocab.size());
+        params.init(vocab, dim, word_layer, word_head, seg_layer, seg_head, sent_layer, 1024,
+                class_vocab.size());
     } else {
-        loadModel(params, vocab, class_vocab, model_file, iteration, dim, word_layer, head,
-                sent_layer);
+        loadModel(params, vocab, class_vocab, model_file, iteration, dim, word_layer, word_head,
+                seg_layer, seg_head, sent_layer);
     }
 
     dtype lr = args["lr"].as<dtype>();
@@ -293,6 +306,9 @@ int main(int argc, const char *argv[]) {
 
     int save_iter = args["save_iter"].as<int>();
     cout << fmt::format("save_iter:{}", save_iter) << endl;
+
+    int seg_len = args["seg_len"].as<int>();
+    cout << fmt::format("seg_len:{}", seg_len) << endl;
 
     vector<int> train_ids;
     for (int i = 0; i < train_set.first.size(); ++i) {
@@ -310,6 +326,7 @@ int main(int argc, const char *argv[]) {
         cout << "batch_size:" << batch_size << endl;
         dtype dropout = args["dropout"].as<dtype>();
         int word_symbol_id = vocab.from_string(WORD_SYMBOL);
+        int seg_symbol_id = vocab.from_string(SEG_SYMBOL);
         vector<float> correct_times;
         vector<float> predicted_times;
         vector<float> golden_times;
@@ -342,14 +359,14 @@ int main(int argc, const char *argv[]) {
             vector<int> *batch_ids;
             while (word_sum < batch_size && batch_it != train_ids.end()) {
                 batch_ids = &train_set.first.at(*batch_it);
-                Node *node = sentEnc(*batch_ids, graph, params, dropout, initial_states,
-                        word_symbol_id);
+                Node *node = sentEnc(*batch_ids, seg_len, seg_symbol_id, graph, params, dropout,
+                        initial_states, word_symbol_id);
                 log_probs.push_back(node);
 
                 int answer = train_set.second.at(*batch_it);
                 vector<int> ans;
                 int word_num = node->size() / class_vocab.size();
-                word_sum += word_num;
+                word_sum += batch_ids->size();
                 for (int i = 0; i < word_num; ++i) {
                     ans.push_back(answer);
                 }
@@ -411,8 +428,8 @@ int main(int argc, const char *argv[]) {
                     }
                     last_f1 = macro_f1;
                 }
-                saveModel(params, vocab, class_vocab, "model-", iteration, dim, word_layer, head,
-                        sent_layer);
+                saveModel(params, vocab, class_vocab, "model-", iteration, dim, word_layer,
+                        word_head, sent_layer);
             }
         }
     }
