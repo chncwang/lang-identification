@@ -21,11 +21,6 @@
 #include "fmt/core.h"
 #include "insnet/insnet.h"
 
-enum ParsingState {
-    IN_WORD = 0,
-    IN_SPACE = 1,
-};
-
 inline bool between(char32_t ch, char32_t begin, char32_t end) {
     if (begin > end) {
         std::cerr << begin << end << std::endl;
@@ -56,7 +51,7 @@ inline std::string langName(const std::string &path) {
     return name.substr(0, end);
 }
 
-inline int wordId(const std::unordered_map<std::string, int> &vocab, const std::string &str) {
+inline int charId(const std::unordered_map<std::string, int> &vocab, const std::string &str) {
     auto it = vocab.find(str);
     if (it == vocab.end()) {
         return vocab.at(UNK);
@@ -65,41 +60,74 @@ inline int wordId(const std::unordered_map<std::string, int> &vocab, const std::
     }
 }
 
-inline static int max_word_len;
-
 inline std::vector<int> splitIntoWords(const utf8_string &line,
         const std::unordered_map<std::string, int> &vocab) {
+    enum ParsingState {
+        IN_WORD = 0,
+        IN_SPACE = 1,
+        IN_SENT = 2,
+    };
+
     std::vector<int> ret;
     ParsingState state = ParsingState::IN_SPACE;
-    int begin_i = 0;
+    int word_len = 0;
+    int word_symbol_id = vocab.at(WORD_SYMBOL);
     for (int i = 0; i < line.length(); ++i) {
         char32_t ch = line.at(i);
         if (ch == ' ') {
-            if (state == ParsingState::IN_WORD) {
+            if (state != ParsingState::IN_SPACE) {
                 state = ParsingState::IN_SPACE;
             }
+            if (word_len > 32) {
+                int &id = ret.at(ret.size() - 1 - word_len);
+                if (id != word_symbol_id) {
+                    std::cerr << fmt::format("splitIntoWords line:{}", line.cpp_str()) << std::endl;
+                    abort();
+                }
+                id = -1;
+            }
+            word_len = 0;
         } else {
             if (state == ParsingState::IN_SPACE) {
-                begin_i = i;
-                state = ParsingState::IN_WORD;
-                ret.push_back(vocab.at(WORD_SYMBOL));
-            }
-            auto str = line.substr(i, 1).cpp_str();
-            int id = wordId(vocab, str);
-            ret.push_back(id);
-        }
-    }
-    return ret;
-}
+                int symbol = 0;
+                if (isCJK(line.at(i))) {
+                    symbol = -1;
+                    state = ParsingState::IN_SENT;
+                } else {
+                    ++word_len;
+                    symbol = word_symbol_id;
+                    state = ParsingState::IN_WORD;
+                }
+                ret.push_back(symbol);
+            } else if (state == ParsingState::IN_WORD) {
+                if (isCJK(line.at(i))) {
+                    if (word_len > 32) {
+                        int &id = ret.at(ret.size() - 1 - word_len);
+                        if (id != word_symbol_id) {
+                            std::cerr << fmt::format("splitIntoWords line:{}", line.cpp_str()) << std::endl;
+                            abort();
+                        }
+                        id = -1;
+                    } else {
+                        ret.push_back(-1);
+                    }
 
-inline std::vector<int> filterSpaces(const utf8_string &line,
-        const std::unordered_map<std::string, int> &vocab) {
-    std::vector<int> ret;
-    for (int i = 0; i < line.length(); ++i) {
-        char32_t ch = line.at(i);
-        if (ch != ' ') {
+                    state = ParsingState::IN_SENT;
+                    word_len = 0;
+                } else {
+                    word_len++;
+                }
+            } else if (state == ParsingState::IN_SENT) {
+                if (!isCJK(line.at(i))) {
+                    ++word_len;
+                    state = ParsingState::IN_WORD;
+                    ret.push_back(word_symbol_id);
+                }
+            }
+
             auto str = line.substr(i, 1).cpp_str();
-            ret.push_back(wordId(vocab, str));
+            int id = charId(vocab, str);
+            ret.push_back(id);
         }
     }
     return ret;
@@ -113,7 +141,6 @@ inline std::pair<std::vector<std::vector<int>>, std::vector<int>> readDataset(
     std::vector<std::vector<int>> sent_ret;
     std::vector<int> class_ret;
     int sent_num = 0;
-    float warning_num = 0;
 
     for (const auto &entry : std::filesystem::directory_iterator(dir_name)) {
         std::cout << fmt::format("sent_num:{} rate:{}", sent_num, sent_num / 15462425.0f) << std::endl;
@@ -122,7 +149,6 @@ inline std::pair<std::vector<std::vector<int>>, std::vector<int>> readDataset(
         std::string raw_line;
         std::string lang_name = langName(path);
 
-        float style = 0;
         int local_sent_num = 0;
         int read_local_sent_num = 0;
         int read_sent_num = 0;
@@ -135,58 +161,20 @@ inline std::pair<std::vector<std::vector<int>>, std::vector<int>> readDataset(
             ++read_sent_num;
             ++read_local_sent_num;
 
-            ParsingState state = ParsingState::IN_SPACE;
             utf8_string line(raw_line);
-            int word_num = 0;
-            int char_num = 0;
-            int cjk_num = 0;
-            for (int i = 0; i < line.length(); ++i) {
-                char32_t ch = line.at(i);
-                if (ch == ' ') {
-                    if (state == ParsingState::IN_WORD) {
-                        state = ParsingState::IN_SPACE;
-                    }
-                } else {
-                    ++char_num;
-                    if (state == ParsingState::IN_SPACE) {
-                        state = ParsingState::IN_WORD;
-                        ++word_num;
-                    }
-                }
 
-                if (isCJK(ch)) {
-                    cjk_num++;
-                    if (cjk_num > 0.25 * line.length()) {
-                        break;
-                    }
+            auto words = splitIntoWords(line, vocab);
+            if (local_sent_num % 1000 == 0) {
+                std::cout << fmt::format("line:{}", raw_line) << std::endl;
+                for (int id : words) {
+                    std::cout << id << " ";
                 }
+                std::cout << std::endl;
             }
 
-            if (word_num * 20 > char_num && cjk_num < char_num * 0.25) {
-                if (style / read_local_sent_num > 1.5) {
-                    warning_num += 1;
-                    std::cout << fmt::format("filename:{} line:{} word_num:{} char_num:{} warning_rate:{} style:{} cjk_num:{}",
-                            path, raw_line, word_num, char_num, warning_num / read_sent_num,
-                            style/ read_local_sent_num, cjk_num) << std::endl;
-                }
-                style += 1;
-                sent_ret.push_back(splitIntoWords(line, vocab));
-            } else {
-                if (style / read_local_sent_num < 1.5) {
-                    warning_num += 1;
-                    std::cout << fmt::format("filename:{} line:{} word_num:{} char_num:{} warning_rate:{} style:{} cjk_num:{}",
-                            path, raw_line, word_num, char_num, warning_num / read_sent_num,
-                            style/ read_local_sent_num, cjk_num) << std::endl;
-                }
-                style += 2;
-                sent_ret.push_back(filterSpaces(line, vocab));
-            }
+            sent_ret.push_back(move(words));
             int class_id = class_vocab.at(lang_name);
             class_ret.push_back(class_id);
-        }
-        if (local_sent_num > 0) {
-            std::cout << fmt::format("filename:{} total style:{}", path, style/read_local_sent_num) <<
-                std::endl;
         }
     }
 

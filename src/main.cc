@@ -176,7 +176,7 @@ float evaluate(ModelParams &params, dtype dropout, const string &dir, Vocab &voc
         while (word_sum < batch_size * 0.5 && batch_it != ids.end()) {
             batch_ids = &dataset.first.at(*batch_it);
             Node *node = sentEnc(*batch_ids, seg_len, seg_symbol_id, graph, params, dropout,
-                    initial_states, word_symbol_id);
+                    initial_states);
             log_probs.push_back(node);
 
             int answer = dataset.second.at(*batch_it);
@@ -379,7 +379,7 @@ int main(int argc, const char *argv[]) {
             while (word_sum < batch_size && batch_it != train_ids.end()) {
                 batch_ids = &train_set.first.at(*batch_it);
                 Node *node = sentEnc(*batch_ids, seg_len, seg_symbol_id, graph, params, dropout,
-                        initial_states, word_symbol_id);
+                        initial_states);
                 log_probs.push_back(node);
 
                 int answer = train_set.second.at(*batch_it);
