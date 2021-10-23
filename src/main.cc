@@ -159,7 +159,7 @@ float evaluate(ModelParams &params, dtype dropout, const string &dir, Vocab &voc
     while (batch_begin != ids.end()) {
         ++iteration;
         auto batch_it = batch_begin;
-        int word_sum = 0;
+        int seg_sum = 0;
         Graph graph(insnet::ModelStage::INFERENCE, false);
         vector<vector<int>> answers;
 
@@ -173,7 +173,7 @@ float evaluate(ModelParams &params, dtype dropout, const string &dir, Vocab &voc
         int sentence_size = 0;
         vector<Node *> log_probs;
         vector<int> *batch_ids;
-        while (word_sum < batch_size * 0.5 && batch_it != ids.end()) {
+        while (seg_sum < batch_size * 0.5 && batch_it != ids.end()) {
             batch_ids = &dataset.first.at(*batch_it);
             Node *node = sentEnc(*batch_ids, seg_len, seg_symbol_id, graph, params, dropout,
                     initial_states);
@@ -181,9 +181,9 @@ float evaluate(ModelParams &params, dtype dropout, const string &dir, Vocab &voc
 
             int answer = dataset.second.at(*batch_it);
             vector<int> ans;
-            int word_num = node->size() / class_vocab.size();
-            word_sum += batch_ids->size();
-            for (int i = 0; i < word_num; ++i) {
+            int seg_num = node->size() / class_vocab.size();
+            seg_sum += seg_num;
+            for (int i = 0; i < seg_num; ++i) {
                 ans.push_back(answer);
             }
             answers.push_back(move(ans));
@@ -220,7 +220,7 @@ float evaluate(ModelParams &params, dtype dropout, const string &dir, Vocab &voc
                 if (batch_ids->at(i) == word_symbol_id) {
                     cout << " ";
                 } else {
-                    cout << vocab.from_id(batch_ids->at(i));
+                    if (batch_ids->at(i) >= 0) cout << vocab.from_id(batch_ids->at(i));
                 }
             }
             cout << endl;
@@ -344,7 +344,6 @@ int main(int argc, const char *argv[]) {
         int batch_size = args["batch_size"].as<int>();
         cout << "batch_size:" << batch_size << endl;
         dtype dropout = args["dropout"].as<dtype>();
-        int word_symbol_id = vocab.from_string(WORD_SYMBOL);
         int seg_symbol_id = vocab.from_string(SEG_SYMBOL);
         vector<float> correct_times;
         vector<float> predicted_times;
@@ -362,7 +361,7 @@ int main(int argc, const char *argv[]) {
         while (batch_begin != train_ids.end()) {
             ++iteration;
             auto batch_it = batch_begin;
-            int word_sum = 0;
+            int seg_sum = 0;
             Graph graph(insnet::ModelStage::TRAINING, false);
             vector<vector<int>> answers;
 
@@ -376,7 +375,7 @@ int main(int argc, const char *argv[]) {
             int sentence_size = 0;
             vector<Node *> log_probs;
             vector<int> *batch_ids;
-            while (word_sum < batch_size && batch_it != train_ids.end()) {
+            while (seg_sum < batch_size && batch_it != train_ids.end()) {
                 batch_ids = &train_set.first.at(*batch_it);
                 Node *node = sentEnc(*batch_ids, seg_len, seg_symbol_id, graph, params, dropout,
                         initial_states);
@@ -384,9 +383,9 @@ int main(int argc, const char *argv[]) {
 
                 int answer = train_set.second.at(*batch_it);
                 vector<int> ans;
-                int word_num = node->size() / class_vocab.size();
-                word_sum += batch_ids->size();
-                for (int i = 0; i < word_num; ++i) {
+                int seg_num = node->size() / class_vocab.size();
+                seg_sum += seg_num;
+                for (int i = 0; i < seg_num; ++i) {
                     ans.push_back(answer);
                 }
                 answers.push_back(move(ans));
@@ -418,14 +417,7 @@ int main(int argc, const char *argv[]) {
                         sentence_size_sum / train_ids.size(), loss,
                         sentence_size, sum / class_vocab.size(), correct_time / total_time) << endl;
                 cout << "gold:" << class_vocab.from_id(answers.back().back()) << endl;
-                for (int i = 0; i < batch_ids->size(); ++i) {
-                    if (batch_ids->at(i) == word_symbol_id) {
-                        cout << " ";
-                    } else {
-                        cout << vocab.from_id(batch_ids->at(i));
-                    }
-                }
-                cout << endl;
+                print(*batch_ids, vocab);
                 for (int id : predicted_ids.back()) {
                     cout << class_vocab.from_id(id) << " ";
                 }

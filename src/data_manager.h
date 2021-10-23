@@ -78,7 +78,7 @@ inline std::vector<int> splitIntoWords(const utf8_string &line,
             if (state != ParsingState::IN_SPACE) {
                 state = ParsingState::IN_SPACE;
             }
-            if (word_len > 32) {
+            if (word_len > 31) {
                 int &id = ret.at(ret.size() - 1 - word_len);
                 if (id != word_symbol_id) {
                     std::cerr << fmt::format("splitIntoWords line:{}", line.cpp_str()) << std::endl;
@@ -101,7 +101,7 @@ inline std::vector<int> splitIntoWords(const utf8_string &line,
                 ret.push_back(symbol);
             } else if (state == ParsingState::IN_WORD) {
                 if (isCJK(line.at(i))) {
-                    if (word_len > 32) {
+                    if (word_len > 31) {
                         int &id = ret.at(ret.size() - 1 - word_len);
                         if (id != word_symbol_id) {
                             std::cerr << fmt::format("splitIntoWords line:{}", line.cpp_str()) << std::endl;
@@ -129,6 +129,14 @@ inline std::vector<int> splitIntoWords(const utf8_string &line,
             int id = charId(vocab, str);
             ret.push_back(id);
         }
+    }
+    if (word_len > 31) {
+        int &id = ret.at(ret.size() - 1 - word_len);
+        if (id != word_symbol_id) {
+            std::cerr << fmt::format("splitIntoWords line:{}", line.cpp_str()) << std::endl;
+            abort();
+        }
+        id = -1;
     }
     return ret;
 }
@@ -164,7 +172,7 @@ inline std::pair<std::vector<std::vector<int>>, std::vector<int>> readDataset(
             utf8_string line(raw_line);
 
             auto words = splitIntoWords(line, vocab);
-            if (local_sent_num % 1000 == 0) {
+            if (local_sent_num % 100000 == 1) {
                 std::cout << fmt::format("line:{}", raw_line) << std::endl;
                 for (int id : words) {
                     std::cout << id << " ";

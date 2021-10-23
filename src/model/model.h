@@ -6,10 +6,33 @@
 #include "def.h"
 #include "params.h"
 
+inline void print(const std::vector<int> ids, insnet::Vocab &vocab) {
+    using std::cout;
+    using std::endl;
+    for (int id : ids) {
+        if (id == -1) {
+            cout << id <<"<-1>";
+        } else if (id == vocab.from_string(WORD_SYMBOL)) {
+            cout << " ";
+        } else {
+            cout << vocab.from_id(id);
+        }
+    }
+    cout << endl;
+    for (int id : ids) {
+        cout << id << " ";
+    }
+    cout << endl;
+}
+
 inline insnet::Node *wordEnc(const std::vector<int> &word, insnet::Graph &graph,
         ModelParams &params,
         insnet::dtype dropout) {
     using insnet::Node;
+
+    if (word.size() > 32) {
+        abort();
+    }
 
     Node *emb = insnet::embedding(graph, word, params.emb.E);
     Node *enc = insnet::transformerEncoder(*emb, params.word_enc, dropout).back();
@@ -106,11 +129,17 @@ inline insnet::Node *sentEnc(const std::vector<int> &sent, int seg_len, int seg_
         }
 
         if (state == IN_WORD) {
+            word.push_back(id);
             if (i == sent.size() - 1 || sent.at(i + 1) == word_symbol_id || sent.at(i + 1) == -1) {
+                if (word.size() > 32) {
+                    std::cerr << "word size:" << word.size() << std::endl;
+                    print(sent, params.emb.vocab);
+                    print(word, params.emb.vocab);
+                    abort();
+                }
                 word_seg.push_back(make_pair(word, -1));
                 word.clear();
             }
-            word.push_back(id);
         } else {
             word_seg.push_back(make_pair(vector<int>(), id));
         }
