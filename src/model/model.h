@@ -96,7 +96,8 @@ inline insnet::Node *sentEnc(const std::vector<int> &sent, int seg_len, int seg_
         insnet::Graph &graph,
         ModelParams &params,
         insnet::dtype dropout,
-        std::vector<insnet::LSTMState> &initial_state) {
+        std::vector<insnet::LSTMState> &initial_state,
+        bool early_exit = false) {
     using insnet::Node;
     using std::make_pair;
     using std::vector;
@@ -145,9 +146,19 @@ inline insnet::Node *sentEnc(const std::vector<int> &sent, int seg_len, int seg_
         }
         if (word_seg.size() == seg_len - 1 || i == sent.size() - 1) {
             auto r = sentEnc(word_seg, *seg_emb, last_state, graph, params, dropout);
+
             last_state = r.second;
             log_probs.push_back(r.first);
             word_seg.clear();
+
+            if (early_exit) {
+                graph.forward();
+                int class_i = insnet::argmax({r.first}, r.first->size()).back().back();
+                float prob = std::exp(r.first->getVal()[class_i]);
+                if (prob > 0.9999 || log_probs.size() > 64) {
+                    break;
+                }
+            }
         }
     }
 

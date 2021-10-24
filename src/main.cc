@@ -22,6 +22,7 @@
 #include "model/params.h"
 #include "model/model.h"
 #include <iomanip>
+#include "common.h"
 
 using cxxopts::Options;
 using std::string;
@@ -96,33 +97,6 @@ string saveModel(ModelParams &model_params, Vocab &vocab, Vocab &class_vocab,
             vocab, model_params);
     cout << fmt::format("model file {} saved", filename) << endl;
     return filename;
-}
-
-void loadModel(ModelParams &model_params, Vocab &vocab, Vocab &class_vocab, const string &filename,
-        int &iter,
-        int &dim,
-        int &word_layer,
-        int &word_head,
-        int &seg_layer,
-        int &seg_head,
-        int &sent_layer) {
-    cout << "loading model file..." << endl;
-    ifstream is(filename.c_str());
-    if (is) {
-        cout << "loading model..." << endl;
-        cereal::BinaryInputArchive ar(is);
-        ar(iter, dim, word_layer, word_head, seg_layer, seg_head, sent_layer, class_vocab, vocab);
-        model_params.init(vocab, dim, word_layer, word_head, seg_layer, seg_head, sent_layer, 1024,
-                class_vocab.size());
-        ar(model_params);
-#if USE_GPU
-        model_params.copyFromHostToDevice();
-#endif
-        cout << "model loaded" << endl;
-    } else {
-        cerr << fmt::format("load model fail - filename:%1%", filename) << endl;
-        abort();
-    }
 }
 
 float evaluate(ModelParams &params, dtype dropout, const string &dir, Vocab &vocab,
@@ -243,7 +217,7 @@ float evaluate(ModelParams &params, dtype dropout, const string &dir, Vocab &voc
 }
 
 int main(int argc, const char *argv[]) {
-    Options options("InsNet benchmark");
+    Options options("lang_id");
     options.add_options()
         ("device_id", "device id", cxxopts::value<int>()->default_value("0"))
         ("model", "load model", cxxopts::value<string>()->default_value(""))

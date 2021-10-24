@@ -24,8 +24,8 @@ endif()
 
 
 ADD_SUBDIRECTORY(3rd/insnet)
-AUX_SOURCE_DIRECTORY(src/ SRCS)
-ADD_EXECUTABLE(main ${SRCS})
+ADD_EXECUTABLE(main src/main.cc)
+ADD_EXECUTABLE(what_lang src/what_lang.cc)
 
 TARGET_LINK_LIBRARIES(main insnet)
-TARGET_LINK_LIBRARIES(main pthread ${LIBS})
+TARGET_LINK_LIBRARIES(what_lang insnet)
