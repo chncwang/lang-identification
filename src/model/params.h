@@ -25,7 +25,7 @@ public:
         output.init(class_num, dim);
     }
 
-    insnet::Embedding<insnet::SparseParam> emb;
+    insnet::Embedding<insnet::Param> emb;
     insnet::TransformerEncoderParams word_enc;
     insnet::TransformerEncoderParams seg_enc;
     insnet::ParamArray<insnet::LSTMParams> sent_enc;

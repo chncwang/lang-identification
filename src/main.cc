@@ -382,6 +382,7 @@ int main(int argc, const char *argv[]) {
                 total_time++;
             }
             if (iteration % 10 == 0) {
+                cout << fmt::format("iteration:{}", iteration) << endl;
                 float sum = 0;
                 for (int i = 0; i < correct_times.size(); ++i) {
                     float f1 = F1(correct_times.at(i), predicted_times.at(i), golden_times.at(i));
