@@ -34,3 +34,4 @@
 *.swo
 
 build/
+compile_commands.json
