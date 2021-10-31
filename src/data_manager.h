@@ -151,11 +151,16 @@ inline std::pair<std::vector<std::vector<int>>, std::vector<int>> readDataset(
     int sent_num = 0;
 
     for (const auto &entry : std::filesystem::directory_iterator(dir_name)) {
-        std::cout << fmt::format("sent_num:{} rate:{}", sent_num, sent_num / 15462425.0f) << std::endl;
+        std::cout << fmt::format("sent_num:{} rate:{}", sent_num, sent_num / 15462425.0f) <<
+            std::endl;
         std::string path = entry.path();
         std::ifstream ifs(path);
         std::string raw_line;
         std::string lang_name = langName(path);
+        if (class_vocab.find(lang_name) == class_vocab.end()) {
+            std::cout << "warning:" << lang_name << " not found!" << std::endl;
+            continue;
+        }
 
         int local_sent_num = 0;
         int read_local_sent_num = 0;

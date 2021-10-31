@@ -26,6 +26,8 @@ endif()
 ADD_SUBDIRECTORY(3rd/insnet)
 ADD_EXECUTABLE(main src/main.cc)
 ADD_EXECUTABLE(what_lang src/what_lang.cc)
+ADD_EXECUTABLE(evaluate src/evaluate.cc)
 
 TARGET_LINK_LIBRARIES(main insnet)
 TARGET_LINK_LIBRARIES(what_lang insnet)
+TARGET_LINK_LIBRARIES(evaluate insnet)

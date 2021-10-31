@@ -154,6 +154,9 @@ inline insnet::Node *sentEnc(const std::vector<int> &sent, int seg_len, int seg_
             if (early_exit) {
                 graph.forward();
                 int class_i = insnet::argmax({r.first}, r.first->size()).back().back();
+#if USE_GPU
+                r.first->val().copyFromDeviceToHost();
+#endif
                 float prob = std::exp(r.first->getVal()[class_i]);
                 if (prob > 0.9999 || log_probs.size() > 64) {
                     break;

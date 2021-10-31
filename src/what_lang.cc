@@ -86,9 +86,15 @@ int main(int argc, const char *argv[]) {
     Options options("lang_id");
     options.add_options()
         ("model", "load model", cxxopts::value<string>()->default_value("./model"))
+        ("device_id", "device id", cxxopts::value<int>()->default_value("0"))
         ("corpus", "corpus dir", cxxopts::value<string>());
 
     auto args = options.parse(argc, argv);
+
+#if USE_GPU
+    insnet::cuda::initCuda(args["device_id"].as<int>(), 0);
+#endif
+
     loadModel(params, vocab, class_vocab, args["model"].as<string>());
 
     auto text_info = readDataset(args["corpus"].as<string>(), vocab.m_string_to_id);
@@ -105,6 +111,9 @@ int main(int argc, const char *argv[]) {
                 log_prob->size() - class_vocab.size());
         graph.forward();
         int class_id = insnet::argmax({log_prob}, class_vocab.size()).front().back();
+#if USE_GPU
+        log_prob->val().copyFromDeviceToHost();
+#endif
         cout << fmt::format("filename:{} class:{} prob:{}", text_info.second.at(i),
                 class_vocab.from_id(class_id), std::exp(log_prob->getVal()[class_id])) << endl;
     }
